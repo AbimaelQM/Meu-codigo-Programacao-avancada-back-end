@@ -1,1 +1,2 @@
-# Meu-codigo-Programa-o-avan-ada-back-end
+# programacao-avancada-backend
+Repositório da disciplina Programação Avançada Back-end
