@@ -1,5 +1,6 @@
 // Configuração inicial
 const express = require("express")
+const mongoose = require("mongoose")
 const app = express()
 
 //Forma de ler JSON
@@ -20,11 +21,18 @@ app.get('/',(req,res)=>{
 })
 
 
-
-
 // entregar uma porta
 
-app.listen(3000)
+const DB_USER = "abimael"
+const DB_PASSWORD = "20190300029"
+
+mongoose
+    .connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@apilinks.g7n0w.mongodb.net/?retryWrites=true&w=majority`)
+    .then(() => {
+        console.log("conectamos ao mongoDB")
+        app.listen(3000)
+    })
+    .catch(err => console.log(err))
 
 
 // /*
