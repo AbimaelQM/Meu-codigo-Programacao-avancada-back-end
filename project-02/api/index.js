@@ -3,6 +3,8 @@ const express = require("express")
 const mongoose = require("mongoose")
 const app = express()
 
+const Link = require('./models/Links')
+
 //Forma de ler JSON
 app.use(
     express.urlencoded({
@@ -12,6 +14,26 @@ app.use(
 
 app.use(express.json())
 
+
+// Rotas da API
+app.post('/link', async (req,res)=>{
+    
+    // req.body
+    const {name, url, del} = req.body
+
+    const link = {
+        name,
+        url,
+        del
+    }
+
+    // create
+    try{
+
+    }catch (error) {
+        res.status(500).json({error:error})
+    }
+})
 
 // Rota incial /endpoint
 app.get('/',(req,res)=>{
