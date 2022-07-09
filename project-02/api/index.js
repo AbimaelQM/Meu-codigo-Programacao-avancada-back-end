@@ -29,7 +29,8 @@ app.post('/link', async (req,res)=>{
 
     // create
     try{
-
+        await Link.create(link)
+        res.status(201).json({massage: "Deu certo"})
     }catch (error) {
         res.status(500).json({error:error})
     }
@@ -60,50 +61,48 @@ mongoose
 // /*
 // Esse codigo cria uma API para servir ao frontend da aplicação que simula o favoritos do navegador. 
 // */
-
-// // Importação dos módulos.
+// Importação de módulos
 // const http = require('http')
 // const URL = require('url')
 // const fs = require('fs')
 // const path = require('path')
-
-// // Importação do documento urls.json. Nesse momento do código, o conteúdo do documento vai para o objeto data.
+// // Importação do conteúdo do arquivo JSON
 // const data = require('./urls.json')
-
-// // Servidor rodando na porta 3000.
+// // Método para criar um servidor local na porta 3000 usando o listen
 // http.createServer((req, res) => {
-    
+//     // Configurando o cabeçalho para permitir requisição externa ao servidor
 //     res.setHeader('Access-Control-Allow-Origin', '*')
 //     res.setHeader('Access-Control-Allow-Methods', 'POST,GET,DELETE,UPDATE')
 //     res.setHeader('Access-Control-Max-Age', '256100')
 
-//     // Desestruturação da query string da URL para obter os valores que estão associados às chaves name, url e del.
+//     // Desestruturação da query string da URL para obter os valores passados como name, url e del
 //     const { name, url, del } = URL.parse(req.url, true).query
 
-//     // Função para escrever no documento JSON. Tanto no delete quanto no create. 
+//     // Função para reescrever o documento, tanto no delete quanto no create
 //     function writeFile(cb) {
 //         fs.writeFile(
 //             path.join(__dirname, 'urls.json'),
 //             JSON.stringify(data, null, 2),
 //             err => {
 //                 if (err) throw err
-//                 res.end('Operação realizada com sucesso!')
+//                 cb(JSON.stringify(data))
 //             }
 //         )
 //     }
-
-//     // Mostrar o conteúdo do JSON.
-//     if (!name || !url)
+    
+//     // Mostra o conteúdo
+//     if (!name || !url) {
 //         return res.end(JSON.stringify(data))
-
-//     // Delete - apagar do JSON.
+//     }
+//     // Deleta o conteúdo passado para ser excluído e exibe o conteúdo após a alteração
 //     if (del) {
 //         data.urls = data.urls.filter(item => item.url != url)
-//         return writeFile(message => res.end(message))
+//         writeFile(message => res.end(message))
+//         return data.urls
 //     }
-
-//     // Create - inserir no JSON.
+//     // Cria o conteúdo no documento e após a alteração exibe o documento 
 //     data.urls.push({name, url})
-//     return writeFile(message => res.end(message))
+//     writeFile(message => res.end(message))
+//     return data.urls
 
 // }).listen(3000, () => console.log('Api is running.'))
