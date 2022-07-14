@@ -6,7 +6,7 @@ const Link = require('../models/Links')
 router.post('/', async (req,res)=>{
     
     // req.body
-    const {name, url, del} = req.body
+    const {name, url} = req.body
 
     if(!name){
         res.status(422).json({error: "O nome é obrigatório"})
@@ -19,8 +19,7 @@ router.post('/', async (req,res)=>{
 
     const link = {
         name,
-        url,
-        del
+        url
     }
 
     // create
@@ -65,5 +64,50 @@ router.get('/:id', async (req, res)=>{
     }
 })
 
+// Update - atualização de dados (PUT,  PATCH)
+
+router.patch('/:id', async (req, res)=>{
+
+    const id = req.params.id
+
+    const {name, url} = req.body
+
+    const link = {
+        name,
+        url
+    }
+    try {
+        const updateLink = await Link.updateOne({_id:id},link)
+
+        if(updateLink.matchedCount === 0){
+            res.status(422).json({message:"O usuário não foi encontrado!"})
+            return
+        }
+
+        res.status(200).json(link)
+    } catch (error) {
+        res.status(500).json({error:error})
+    }
+})
+
+// DELETE - deletar os dados
+
+router.delete('/:id', async (req, res)=>{
+    const id = req.params.id
+    
+    const link = await Link.findOne({_id:id})
+    if(!link){
+        res.status(422).json({message:"O usuário não foi encontrado!"})
+        return
+    }
+
+    try {
+        await Link.deleteOne({_id:id})
+
+        res.status(200).json({message: 'Link removido com sucesso'})
+    } catch (error) {
+        res.status(500).json({error:error})
+    }
+})
 
 module.exports = router
