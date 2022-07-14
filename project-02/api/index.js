@@ -30,8 +30,8 @@ app.get('/',(req,res)=>{
 
 // entregar uma porta
 
-const DB_USER = process.env.user
-const DB_PASSWORD = process.env.password
+const DB_USER = process.env.DB_USER
+const DB_PASSWORD = process.env.DB_PASSWORD
 
 mongoose
     .connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@apilinks.g7n0w.mongodb.net/?retryWrites=true&w=majority`)
