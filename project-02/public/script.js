@@ -2,19 +2,28 @@
 const ul = document.querySelector('ul')
 const input = document.querySelector('#input')
 const form = document.querySelector('#form')
-
 // Assim que a página é carregada faz uma requisição ao back-end
-window.addEventListener('load', e =>{
+const show = () => {
+    console.log("chamou")
+    ul.innerHTML = ""
     // O conteúdo da requisição é transformado de JSON para object e em seguida mapeado os dados passando chamando a função de exibir no html
-    fetch(`http://localhost:3000/`)
-        .then(content => content.json())
-        .then(data => data.urls.map(({name, url}) => showElement({name, url})))
-})
+    fetch(`http://localhost:3000/link`)
+    .then(content => content.json())
+    .then(data => data.map(({name, url,_id}) => showElement({name, url,_id})))
+}
+show()
+
+
+/*,{
+        // method: 'GET',
+        // headers: 'Content-Type: application/json'
+    }
+*/
 
 // Função que tem como argumento um object desestruturado com os chaves name e url, para criação do elemento da lista
-function showElement({ name, url }) {
+function showElement({ name, url, _id }) {
     const li = document.createElement('li')
-    li.innerHTML = `<a target="_blank" href="${url}">${name}</a> <button onClick="removeElement(this)" class="remove">X</button>`
+    li.innerHTML = `<a target="_blank" href="${url}"><span hidden>${_id} </span>${name}</a> <button onClick="removeElement(this)" class="remove">X</button>`
     li.classList.add("li-listener")
     ul.appendChild(li)
 }
@@ -23,16 +32,40 @@ function showElement({ name, url }) {
 function addElement({name, url}){
     //Evita que a url venha com espaços em branco
     const urlTratada = url.replace(" ","")
-    fetch(`http://localhost:3000/?name=${name}&url=${urlTratada}`)
+    console.log(name, urlTratada)
+    fetch('http://localhost:3000/link',{
+        method: 'POST',
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body:JSON.stringify({
+            name: name,
+            url: urlTratada
+        })
+
+    })
+    .then(resposta => {
+        if(resposta.status==201){
+            show()
+            alert("Link adicionado com sucesso")
+        }
+    })
 }
 
 // Função que tem como argumento o Elemento html passado no html que é o button 
 function removeElement(element) {
     // Pega o conteúdo do elemento <a>(irmão do button) e seu href para passar no fetch 
-    const name = element.parentNode.children[0].textContent
-    const href = element.parentNode.children[0].href
-    const url = href.substring(0, href.length - 1);
-    fetch(`http://localhost:3000/?name=${name}&url=${url}&del=1`)
+    const id = element.parentNode.children[0].children[0].textContent
+    console.log(typeof id)
+    fetch(`http://localhost:3000/link/${id}`,{
+        method: 'DELETE'
+    })
+    .then(response => {
+        if(response.status==200){
+            show()
+            alert("Link deletado com sucesso")
+        }
+    })
 
 }
 

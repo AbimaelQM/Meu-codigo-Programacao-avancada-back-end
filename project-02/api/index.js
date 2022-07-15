@@ -1,10 +1,19 @@
 // Configuração inicial
-require('dotenv').config()
+// const dotenv = require('dotenv')
+// dotenv.config()
 const express = require("express")
 const mongoose = require("mongoose")
+const cors = require("cors")
 const app = express()
 
-
+app.use((req, res, next)=>{
+    console.log("acessou o middleware")
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'POST,PATCH,GET,DELETE,UPDATE')
+    res.header('Access-Control-Allow-Headers', 'Content-Type')
+    app.use(cors())
+    next()
+})
 //Forma de ler JSON
 app.use(
     express.urlencoded({
@@ -28,10 +37,13 @@ app.get('/',(req,res)=>{
 })
 
 
-// entregar uma porta
+// entregar uma porta 
 
-const DB_USER = process.env.DB_USER
-const DB_PASSWORD = process.env.DB_PASSWORD
+const DB_USER="abimael"
+// console.log(process.env.DB_USER)
+const DB_PASSWORD=encodeURIComponent("20190300029")
+// const DB_USER = 'abimael'
+// const DB_PASSWORD = 20190300029
 
 mongoose
     .connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@apilinks.g7n0w.mongodb.net/?retryWrites=true&w=majority`)
